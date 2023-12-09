@@ -74,11 +74,26 @@ export default class API {
         return DATA.movies.find(movie => movie.id === id)
     }
     async findUser(id) {
-        return new Promise(resolve => {
-            const user = DATA.users.find(user => user.email === id)
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`http://localhost:8080/users/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-            resolve(user)
-        })
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al obtener usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 
     async findComments(
@@ -116,11 +131,52 @@ export default class API {
         })
     }
 
+    //NO FUNCIONA
     async createUser(user) {
-        console.log(user)
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`http://localhost:8080/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user: user })
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al crear el usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 
     async updateUser(id, user) {
-        console.log(user)
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`http://localhost:8080/users/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: user })
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al modificar el usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 }
