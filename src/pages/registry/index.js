@@ -59,7 +59,7 @@ export default function Login() {
                   autoComplete = 'off'>
                 <Logo className = 'text-6xl mb-8' logoSize = 'w-12 h-12'/>
                 <Input type = 'email'
-                       name = 'user'
+                       name = 'email'
                        label = 'Email'
                        labelClassName = 'mb-4'
                        errors = { errors }

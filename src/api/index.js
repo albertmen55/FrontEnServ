@@ -74,7 +74,8 @@ export default class API {
         return DATA.movies.find(movie => movie.id === id)
     }
     async findUser(id) {
-        return new Promise(async (resolve, reject) => {
+        return DATA.users.find(user => user.id === id)
+       /* return new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(`http://localhost:8080/users/${id}`, {
                     method: 'GET',
@@ -93,7 +94,7 @@ export default class API {
                 console.error('Error:', error.message);
                 reject(error);
             }
-        });
+        });*/
     }
 
     async findComments(
@@ -135,13 +136,18 @@ export default class API {
     async createUser(user) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch(`http://localhost:8080/users`, {
+                const url = "http://localhost:8080/users"
+                const request = {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ user: user })
-                });
+                    body: JSON.stringify({ email: user[0], name: user[1], password: user[2], birthday: user[3] })
+                };
+
+                console.log(user);
+
+                const response = await fetch(url, request);
 
                 if (response.ok) {
                     const user = await response.json();
@@ -157,14 +163,15 @@ export default class API {
     }
 
     async updateUser(id, user) {
-        return new Promise(async (resolve, reject) => {
+        console.log(user);
+        /*return new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(`http://localhost:8080/users/${id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: user })
+                    body: JSON.stringify({ user: user })
                 });
 
                 if (response.ok) {
@@ -177,6 +184,6 @@ export default class API {
                 console.error('Error:', error.message);
                 reject(error);
             }
-        });
+        });*/
     }
 }
