@@ -75,26 +75,6 @@ export default class API {
     }
     async findUser(id) {
         return DATA.users.find(user => user.id === id)
-       /* return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`http://localhost:8080/users/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
-                } else {
-                    reject(`Error al obtener usuario: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-                reject(error);
-            }
-        });*/
     }
 
     async findComments(
@@ -132,7 +112,6 @@ export default class API {
         })
     }
 
-    //NO FUNCIONA
     async createUser(user) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -165,26 +144,5 @@ export default class API {
 
     async updateUser(id, user) {
         console.log(user);
-        /*return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`http://localhost:8080/users/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ user: user })
-                });
-
-                if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
-                } else {
-                    reject(`Error al modificar el usuario: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-                reject(error);
-            }
-        });*/
     }
 }
