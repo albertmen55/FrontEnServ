@@ -142,7 +142,8 @@ export default class API {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: user[0], name: user[1], password: user[2], birthday: user[3] })
+                    body: JSON.stringify({ email: user.email, name: user.name, password: user.password, birthday: user.birthday })
+
                 };
 
                 console.log(user);
