@@ -74,6 +74,7 @@ export default class API {
         return DATA.movies.find(movie => movie.id === id)
     }
     async findUser(id) {
+<<<<<<< HEAD
         return new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(`http://localhost:8080/users/${id}`, {
@@ -94,6 +95,9 @@ export default class API {
                 reject(error);
             }
         });
+=======
+        return DATA.users.find(user => user.id === id)
+>>>>>>> 264fa373d140d2c7b8375d6115268895152d35f3
     }
 
     async findComments(
@@ -131,7 +135,6 @@ export default class API {
         })
     }
 
-    //NO FUNCIONA
     async createUser(user) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -141,15 +144,15 @@ export default class API {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: user[0], name: user[1], password: user[2], birthday: user[3] })
+                    body: JSON.stringify({ email: user.email, name: user.name, password: user.password, birthday: user.birthday })
+
                 };
 
                 const response = await fetch(url, request);
 
                 if (response.ok) {
-                    const useri = await response.json();
-                    localStorage.setItem('user', user[0])
-                    resolve(useri);
+                    const user = await response.json();
+                    resolve(user);
                 } else {
                     reject(`Error al crear el usuario: ${response.statusText}`);
                 }
@@ -162,26 +165,5 @@ export default class API {
 
     async updateUser(id, user) {
         console.log(user);
-        /*return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`http://localhost:8080/users/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ user: user })
-                });
-
-                if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
-                } else {
-                    reject(`Error al modificar el usuario: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-                reject(error);
-            }
-        });*/
     }
 }
