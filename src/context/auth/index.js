@@ -24,6 +24,7 @@ function SecuredApp({children}) {
     const login = async (user, pass) => {
         const loginSuccessful = await client.login(user, pass)
         localStorage.setItem('authenticated', loginSuccessful)
+        localStorage.setItem('user', user)
         setIsAuthenticated(loginSuccessful)
         setErrors(!loginSuccessful)
     }

@@ -39,7 +39,7 @@ export default class API {
     async logout() {
         this.#token = null
         localStorage.clear()
-
+        sessionStorage.clear()
         return true
     }
     async findMovies(
@@ -74,8 +74,7 @@ export default class API {
         return DATA.movies.find(movie => movie.id === id)
     }
     async findUser(id) {
-        return DATA.users.find(user => user.id === id)
-       /* return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(`http://localhost:8080/users/${id}`, {
                     method: 'GET',
@@ -94,7 +93,7 @@ export default class API {
                 console.error('Error:', error.message);
                 reject(error);
             }
-        });*/
+        });
     }
 
     async findComments(
@@ -145,13 +144,12 @@ export default class API {
                     body: JSON.stringify({ email: user[0], name: user[1], password: user[2], birthday: user[3] })
                 };
 
-                console.log(user);
-
                 const response = await fetch(url, request);
 
                 if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
+                    const useri = await response.json();
+                    localStorage.setItem('user', user[0])
+                    resolve(useri);
                 } else {
                     reject(`Error al crear el usuario: ${response.statusText}`);
                 }
