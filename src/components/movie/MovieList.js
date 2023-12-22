@@ -61,7 +61,7 @@ function Poster({className = '', movie}) {
     >
         <Link to = { `/movies/${movie.id}` }>
             <img className = 'w-full h-full object-cover'
-                 src = { movie.resources.find(res => res.type === 'POSTER').url }
+                 src = { movie.resources.find(res => res.type === 'POSTER') ? movie.resources.find(res => res.type === 'POSTER').url : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fmovie-poster&psig=AOvVaw0fYY5CYIkpWhnHkBor1oYF&ust=1670580471195000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMihrq3j6fsCFQAAAAAdAAAAABAE" }
                  alt = { `${movie.title } poster` } />
         </Link>
     </li>

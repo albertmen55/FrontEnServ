@@ -27,6 +27,7 @@ export default class API {
             if (response.ok) {
                 const code = response.headers.get("authentication");
                 sessionStorage.setItem('token', code)
+                this.#token = code
                 return true;
             } else {
                 return false;
@@ -42,48 +43,78 @@ export default class API {
         sessionStorage.clear()
         return true
     }
-    async findMovies(
-        {
-            filter: { genre = '', title = '', status = '' } = { genre : '', title : '', status : '' },
-            sort,
-            pagination: {page = 0, size = 7} = { page: 0, size: 7 }
-        } = {
-            filter: { genre : '', title : '', status : '' },
-            sort: {},
-            pagination: { page: 0, size: 7 }
-        }
-    ) {
-        return new Promise(resolve => {
-            const filtered = DATA.movies
-                ?.filter(movie => movie.title.toLowerCase().includes(title.toLowerCase() || ''))
-                ?.filter(movie => genre !== '' ? movie.genres.map(genre => genre.toLowerCase()).includes(genre.toLowerCase()) : true)
-                ?.filter(movie => movie.status.toLowerCase().includes(status.toLowerCase() || ''))
 
-            const data = {
-                content: filtered?.slice(size * page, size * page + size),
-                pagination: {
-                    hasNext: size * page + size < filtered.length,
-                    hasPrevious: page > 0
+    async findMovies(filter) {
+        //hay que construir el filter, basicamente ver que tiene
+        let url = "http://localhost:8080/films?"
+        for (let key in filter){
+            for(let key2 in filter[key]){
+                if(filter[key][key2] === ""){
+                    continue
+                }else if(key === "sort"){
+                    //el srot es un caso especial, en el que podríamos tener varios parametros, ademas hay que traducir ASC y DESC a a y -
+                    url = url + `sort=`
+                    if(filter[key][key2] === "ASC"){
+                        url = url + `a${key2}&`
+                    }else if(filter[key][key2] === "DESC"){
+                        url = url + `-${key2}&`
+                    }else{
+                        //se ha puesto mal el sort asi que va sin ordenar
+                        console.log("error en el sort")
+                    }
+                }
+                else{
+                    url = url + `${key2}=${filter[key][key2]}&`
                 }
             }
-
-            resolve(data)
-        })
+            //para todos los filtros que se pongan se añade a la url
+            //para sort, tendremos que ver si es ASC o DESC y añadir todos los sort que se hayan puesto
+        }
+        if(url === "http://localhost:8080/films?"){
+            //no hubo filtros
+            url = "http://localhost:8080/films"
+        }else{
+            //hay que quitar el & final
+            url = url.slice(0, -1)
+        }
+        const films = await fetch(url,{
+            method: "GET",
+            headers: { 'Content-Type': 'application/json',
+                'Authorization': this.#token}})
+        return await films.json()
     }
     async findMovie(id) {
-        return DATA.movies.find(movie => movie.id === id)
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`http://localhost:8080/films/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const film = await response.json();
+                    resolve(film);
+                } else {
+                    reject(`Error al obtener la pelicula: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
     async findUser(id) {
-<<<<<<< HEAD
         return new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(`http://localhost:8080/users/${id}`, {
                     method: 'GET',
                     headers: {
+                        'Authorization': `${this.#token}`,
                         'Content-Type': 'application/json',
                     },
                 });
-
                 if (response.ok) {
                     const user = await response.json();
                     resolve(user);
@@ -95,9 +126,6 @@ export default class API {
                 reject(error);
             }
         });
-=======
-        return DATA.users.find(user => user.id === id)
->>>>>>> 264fa373d140d2c7b8375d6115268895152d35f3
     }
 
     async findComments(
@@ -135,6 +163,31 @@ export default class API {
         })
     }
 
+    async createFilm(film) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const url = "http://localhost:8080/films"
+                const request = {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(film.title)
+                };
+                const response = await fetch(url, request);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al crear el usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
+    }
     async createUser(user) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -165,5 +218,31 @@ export default class API {
 
     async updateUser(id, user) {
         console.log(user);
+    }
+
+    async updateFilm(id, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const url = 'http://localhost:8080/films/' + id
+                const request = {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                };
+                const response = await fetch(url, request);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al crear el usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 }

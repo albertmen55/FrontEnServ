@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player'
 
 import { Shell, Link, TODO, Separator } from '../../components'
 
-import { useMovie, useComments } from '../../hooks'
+import { useMovie, useComments, useUser } from '../../hooks'
 
 import Disney from './icons/disney_plus.png'
 import Play from './icons/google_play.png'
@@ -24,8 +24,8 @@ const poster = movie => movie?.resources?.find(res => res?.type === 'POSTER')?.u
 
 export default function Movie() {
     const { id } = useParams()
-    const movie = useMovie(id)
-
+    const movie = useMovie(id).film
+    const user = useUser(localStorage.getItem('user'))
     return <Shell>
         <img style = {{ height: '36rem' }}
              src = { backdrop(movie) }
@@ -40,12 +40,14 @@ export default function Movie() {
             <span>Volver</span>
         </Link>
 
-        <Link variant = 'primary'
-              className = 'rounded-full absolute text-white top-4 right-8 flex items-center px-2 py-2 gap-4'
-              to = {`/movies/${id}/edit`}
-        >
-            <Edit className = 'w-8 h-8'/>
-        </Link>
+        {user.user.length === 0 ? null : user.user.roles[0] === 'ROLE_USER' ? null :
+            <Link variant='primary'
+                  className='rounded-full absolute text-white top-4 right-8 flex items-center px-2 py-2 gap-4'
+                  to={`/movies/${id}/edit`}
+            >
+                <Edit className='w-8 h-8'/>
+            </Link>
+        }
 
         <div className = 'mx-auto w-full max-w-screen-2xl p-8'>
             <Header movie = { movie } />

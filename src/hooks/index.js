@@ -9,22 +9,32 @@ export function useMovies(query = {}) {
     useEffect(() => {
         API.instance()
             .findMovies(JSON.parse(queryString))
-            .then(setData)
+            .then(resolve => {setData(resolve)})
     }, [queryString])
-
     return data
 }
 
 export function useMovie(id = '') {
     const [data, setData] = useState({})
-
     useEffect(() => {
         API.instance()
             .findMovie(id)
             .then(setData)
     }, [id])
 
-    return data
+    const createFilm = film => API.instance()
+        .createFilm(film)
+        .then(film => setData(film))
+
+    const updateFilm = (id, body) => API.instance()
+        .updateFilm(id, body)
+        .then(user => setData(user))
+
+    return {
+        film: data,
+        createFilm,
+        updateFilm
+    }
 }
 
 export function useUser(id = null) {
@@ -42,6 +52,7 @@ export function useUser(id = null) {
     const create = user => API.instance()
             .createUser(user)
             .then(user => setData(user))
+
 
     const update = user => API.instance()
             .updateUser(id, user)
