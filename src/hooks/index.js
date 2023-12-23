@@ -48,7 +48,6 @@ export function useUser(id = null) {
                 setData(user)
             })
     }, [userId])
-
     const create = user => API.instance()
             .createUser(user)
             .then(user => setData(user))

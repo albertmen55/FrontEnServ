@@ -128,39 +128,54 @@ export default class API {
         });
     }
 
-    async findComments(
-        {
-            filter: { movie = '', user = '' } = { movie: '', user: '' },
-            sort,
-            pagination: {page = 0, size = 10} = { page: 0, size: 10}
-        } = {
-            filter: { movie: '', user: '' },
-            sort: {},
-            pagination: { page: 0, size: 10}
-        }
-    ) {
-        return new Promise(resolve => {
-            const filtered = DATA.comments
-                ?.filter(comment => comment?.movie?.id === movie)
-
-            const data = {
-                content: filtered?.slice(size * page, size * page + size),
-                pagination: {
-                    hasNext: size * page + size < filtered.length,
-                    hasPrevious: page > 0
+    async findComments(filtro) {
+        let url = "http://localhost:8080/comments?"
+        for (let key in filtro){
+            for(let key2 in filtro[key]){
+                if(filtro[key][key2] === ""){
+                    continue
+                }else{
+                    url = url + `${key2}=${filtro[key][key2]}&`
                 }
             }
-
-            resolve(data)
-        })
+        }
+        if(url === "http://localhost:8080/comments?"){
+            url = "http://localhost:8080/comments"
+        }else{
+            url = url.slice(0, -1)
+        }
+        const response = await fetch(url,{
+            method: "GET",
+            headers: { 'Content-Type': 'application/json',
+                'Authorization': this.#token
+            }})
+        return await response.json()
     }
 
     async createComment(comment) {
-        return new Promise(resolve => {
-            DATA.comments.unshift(comment)
-
-            resolve(true)
-        })
+        return new Promise(async (resolve, reject) => {
+            try {
+                const url = "http://localhost:8080/comments"
+                const request = {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(comment)
+                };
+                const response = await fetch(url, request);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al crear el comentario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 
     async createFilm(film) {

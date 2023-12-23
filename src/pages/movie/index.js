@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { ArrowCircleLeftOutline as Back, PencilAltOutline as Edit } from '@graywolfai/react-heroicons'
 import ReactPlayer from 'react-player'
-
+import {useState} from "react";
 import { Shell, Link, TODO, Separator } from '../../components'
 
 import { useMovie, useComments, useUser } from '../../hooks'
@@ -13,6 +13,7 @@ import ITunes from './icons/itunes.png'
 import Netflix from './icons/netflix.png'
 import Prime from './icons/prime_video.png'
 import Youtube from './icons/youtube.png'
+import {ListaComFilm } from '../../components/comment'
 
 const backdrop = movie => {
     const backdrop = movie?.resources?.find(res => res?.type === 'BACKDROP')?.url
@@ -120,11 +121,72 @@ function Cast({ movie }) {
     </>
 }
 function Comments({ movie }) {
-    const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
+    const { comments, createComment } = useComments({ filter: { film: movie.id } });
+    const [puntuacion, setPuntuacion] = useState(0);
+    const [textoComent, setTextoComent] = useState('');
 
+    const handleClick = (event) => setPuntuacion(event.target.value);
+
+    const handleChange = (event) => setTextoComent(event.target.value);
+
+    const publicaComent = (event) => {
+        let comentario = {
+            rating: parseInt(puntuacion),
+            comment: textoComent,
+            user: {
+                email: localStorage.getItem('user'),
+            },
+            film: {
+                id: movie.id,
+                title: movie.title,
+            }
+        };
+
+        createComment(comentario);
+
+        setPuntuacion(0);
+        setTextoComent('');
+    };
     return <div className = 'mt-16'>
-        <TODO>Añadir lista de comentarios y formulario para añadir nuevo comentario</TODO>
-    </div>
+        <h2 className="mt-16 font-bold text-2xl">Comentarios</h2>
+        <Separator />
+        <ListaComFilm comments={comments} movie={movie} />
+        <div className="mt-8 flex" style={{ height: '24rem' }}>
+            <div className="p-5 flex flex-col" style={{ width: '25%' }}>
+                <p className="font-bold font-serif" style={{ height: '20%' }}>
+                    Y a ti, ¿qué te ha parecido?
+                </p>
+                <div style={{ height: '65%' }}>
+                    <form className="h-full">
+            <textarea
+                name="puntuacion"
+                value={puntuacion}
+                className="w-full h-full rounded-md bg-white border p-5 placeholder-gray-400 font-medium'"
+                placeholder="Escribe aquí tu comentario y comparte tu opinión con otros usuarios. Por favor, evita hacer spoilers..."
+                onChange={handleClick}
+            />
+                    </form>
+                </div>
+                <button
+                    className="w-full border border-red-500 bg-red-600 hover:bg-red-900"
+                    style={{ height: '15%' }}
+                    onClick={publicaComent}
+                >
+                    Publicar
+                </button>
+            </div>
+            <div className="h-full ml-12" style={{ width: '75%' }}>
+                <form className="h-full">
+            <textarea
+                name="comentario"
+                value={textoComent}
+                className="w-full h-full rounded-md bg-white border p-5 placeholder-gray-400 font-medium'"
+                placeholder="Escribe aquí tu comentario y comparte tu opinión con otros usuarios. Por favor, evita hacer spoilers..."
+                onChange={handleChange}
+            />
+                </form>
+            </div>
+        </div>    </div>
 }
 function Tagline({ movie }) {
     if(movie.tagline) {
