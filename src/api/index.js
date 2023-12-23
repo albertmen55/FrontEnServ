@@ -231,8 +231,30 @@ export default class API {
         });
     }
 
-    async updateUser(id, user) {
-        console.log(user);
+    async updateUser(id, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const url = 'http://localhost:8080/users/' + id
+                const request = {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                };
+                const response = await fetch(url, request);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al modificar el usuario: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
     }
 
     async updateFilm(id, body) {
