@@ -58,12 +58,12 @@ export default function Friends() {
             {/* Comentarios */}
             <div className="mt-20">
                 <h1 className="text-2xl font-bold mb-4">Añadir amigos</h1>
-                <div className="border-b border-red-500 w-4/5 mb-4"></div>
+                <div className="border-b border-red-500 w-9/10 mb-4"></div>
                 <Requests user={email} />
             </div>
             <div className="mt-10">
                 <h1 className="text-2xl font-bold mb-4">Amigos</h1>
-                <div className="border-b border-red-500 w-4/5 mb-4"></div>
+                <div className="border-b border-red-500 w-9/10 mb-4"></div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {friends.map((friend, index) => (
