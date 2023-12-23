@@ -128,18 +128,6 @@ export default class API {
         });
     }
 
-    async searchUser(id) {
-        if(id === null){
-            return null
-        }
-
-        const user = await fetch(`http://localhost:8080/users?email=${id}`,{
-            method: "GET",
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': localStorage.getItem('token')}})
-        return await user.json()
-    }
-
     async findComments(filtro) {
         let url = "http://localhost:8080/comments?"
         for (let key in filtro){
@@ -294,4 +282,54 @@ export default class API {
             }
         });
     }
+
+    async addFriend(id, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const url = `http://localhost:8080/users/${id}/friends`
+                const request = {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                };
+                const response = await fetch(url, request);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al añadir al amigo: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
+    }
+
+    async deleteFriend(id, friend) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`http://localhost:8080/users/${id}/friends/${friend}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    reject(`Error al eliminar el amigo: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
+            }
+        });
+    }
+
 }
