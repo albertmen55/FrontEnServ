@@ -6,6 +6,7 @@ import {
     LogoutOutline as Logout,
     UserGroupOutline as Friends,
     UserOutline as Profile,
+    PencilOutline as EditProfile,
     SearchOutline as Search,
     DocumentAddOutline as New } from '@graywolfai/react-heroicons'
 import { Menu, Transition } from '@headlessui/react'
@@ -134,7 +135,7 @@ function AppMenu() {
 
                 <img className = 'h-12 w-12 rounded-full shadow'
                      alt = 'profile icon'
-                     src = { picture } />
+                     src = { picture || "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg"} />
             </Menu.Button>
             <Transition show = { open }
                         className = 'absolute right-4 top-0 pt-2 transform-gpu duration-500 ease-spring'
@@ -153,6 +154,15 @@ function AppMenu() {
                                 <span className = 'block bg-gradient-to-br from-pink-500 to-yellow-500 via-red-500 w-0 h-full group-hover:w-2'/>
                                 <Profile className = 'h-4 w-4 mx-4 text-gray-500'/>
                                 <span>Ver perfil</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <Link className = {`flex items-center w-full h-10 text-sm leading-5 text-left transition text-gray-700 transition-all group
+                                        hover:bg-gray-100 hover:text-gray-900`}
+                                  to = '/edit-profile'>
+                                <span className = 'block bg-gradient-to-br from-pink-500 to-yellow-500 via-red-500 w-0 h-full group-hover:w-2'/>
+                                <EditProfile className = 'h-4 w-4 mx-4 text-gray-500'/>
+                                <span>Editar perfil</span>
                             </Link>
                         </Menu.Item>
                         <Menu.Item>

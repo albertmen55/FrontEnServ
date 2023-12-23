@@ -128,6 +128,18 @@ export default class API {
         });
     }
 
+    async searchUser(id) {
+        if(id === null){
+            return null
+        }
+
+        const user = await fetch(`http://localhost:8080/users?email=${id}`,{
+            method: "GET",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': localStorage.getItem('token')}})
+        return await user.json()
+    }
+
     async findComments(filtro) {
         let url = "http://localhost:8080/comments?"
         for (let key in filtro){

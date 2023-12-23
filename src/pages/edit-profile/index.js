@@ -9,10 +9,10 @@ const backdrop = pic=> {
     return picture
 }
 
-export default function Friends() {
+export default function EditProfile() {
     const { logout } = useContext(AuthenticationContext)
     const { user: { name = '', email = '', picture = '',
-        country='', birthday = {}, friends=[]  } } = useUser()
+        country='', birthday = {}  } } = useUser()
     const { day = '', month = '', year = '' } = birthday;
 
     return <Shell className = 'p-4'>
@@ -55,35 +55,12 @@ export default function Friends() {
                 </div>
             </div>
 
-            {/* Comentarios */}
-            <div className="mt-20">
-                <h1 className="text-2xl font-bold mb-4">Añadir amigos</h1>
-                <div className="border-b border-red-500 w-4/5 mb-4"></div>
-                <Requests user={email} />
+            <div className="mt-20 text-center">
+                <p>Para actualizar tu perfil simplemente coloca tu cursor encima de ella y
+                modificala a tu antojo.</p>
+
+                <p>No podrás modificar tu dirección de correo electrónico ni tu fecha de nacimiento.</p>
             </div>
-            <div className="mt-10">
-                <h1 className="text-2xl font-bold mb-4">Amigos</h1>
-                <div className="border-b border-red-500 w-4/5 mb-4"></div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {friends.map((friend, index) => (
-                        <div key={index} className="bg-white p-4 rounded-md shadow-md">
-                            <h3 className="text-lg font-semibold">{friend.name}</h3>
-                            <p className="text-sm text-gray-500">{friend.email}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-
         </div>
     </Shell>
-}
-
-function Requests({ user }) {
-    //const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
-
-    return <div>
-        <TODO>Añadir metodo para añadir amigos</TODO>
-    </div>
 }
