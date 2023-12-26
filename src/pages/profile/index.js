@@ -1,7 +1,8 @@
-import { Shell, TODO } from '../../components'
+import { Shell, TODO, Separator } from '../../components'
 import {useComments, useMovie, useUser} from "../../hooks";
 import {AuthenticationContext} from "../../context";
 import {useContext} from "react";
+import {ListaComentsUser } from '../../components/comment'
 
 const backdrop = pic=> {
     const picture = pic === 'none' ? "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg" : pic
@@ -57,16 +58,19 @@ export default function Profile() {
 
             {/* Comentarios */}
             <div className="mt-20">
-                <Comments user={email} />
+                <Comments user = { email } />
             </div>
         </div>
     </Shell>
 }
 
 function Comments({ user }) {
-    //const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
+    const { comments} = useComments({ filter: { user : user } } )
 
-    return <div className = 'mt-16'>
-        <TODO>Añadir lista de comentarios</TODO>
+
+    return <div className='mt-12 relative flex flex-col pb-8 mb-8'>
+        <h2 className = 'mt-16 font-bold text-2xl'>Comentarios</h2>
+        <Separator />
+        <ListaComentsUser comments = {comments} />
     </div>
 }

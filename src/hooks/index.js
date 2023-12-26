@@ -75,6 +75,7 @@ export function useComments(query = {}){
     }, [queryString])
 
     const create = comment => {
+        console.log(comment)
         API.instance()
             .createComment(comment)
             .then( () => {

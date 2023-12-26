@@ -1,4 +1,4 @@
-import { Shell, TODO } from '../../components'
+import { Shell, TODO, Separator } from '../../components'
 import {useComments, useMovie, useUser} from "../../hooks";
 import {AuthenticationContext} from "../../context";
 import {useContext} from "react";
@@ -55,15 +55,15 @@ export default function Friends() {
                 </div>
             </div>
 
-            {/* Comentarios */}
+            {/* Amigos */}
             <div className="mt-20">
                 <h1 className="text-2xl font-bold mb-4">Añadir amigos</h1>
-                <div className="border-b border-red-500 w-9/10 mb-4"></div>
+                <Separator/>
                 <Requests user={email} />
             </div>
             <div className="mt-10">
                 <h1 className="text-2xl font-bold mb-4">Amigos</h1>
-                <div className="border-b border-red-500 w-9/10 mb-4"></div>
+                <Separator/>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {friends.map((friend, index) => (
