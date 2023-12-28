@@ -1,11 +1,11 @@
 import ER from './icons/e_rojo.png'
 import EB from './icons/e_blanco.png'
 
-export function ListaComentsUser({comments = []}) {
+export function ListaComUser({comments = []}) {
     const { content = [] } = comments
 
     return <div className="">
-        {content.length === 0 ? <h1>El usuario no ha publicado comentarios todavía</h1> :
+        {content.length === 0 ? <h1>El usuario no ha publicado comentarios</h1> :
             <div className="min-w-min">
                 <div className = 'p-5 flex flex-col space-y-16'  >
                     {

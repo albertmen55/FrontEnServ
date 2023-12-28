@@ -64,6 +64,21 @@ export function useUser(id = null) {
     }
 }
 
+export function useFriend(id, friend)  {
+    const [data, setData] = useState([])
+    const userId = id === null ? localStorage.getItem('user') : id
+
+
+    const add = friend => API.instance()
+        .addFriend(userId, friend)
+        .then(user => setData(user))
+
+    return {
+        add
+    }
+};
+
+
 export function useComments(query = {}){
     const [data, setData] = useState({ content: [], pagination: { hasNext: false, hasPrevious: false }})
     const queryString = JSON.stringify(query)
