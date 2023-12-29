@@ -93,7 +93,7 @@ function Email ( {user}) {
 }
 
 function Requests({ user }) {
-    const { add } = useFriend(user.email)
+    const { addF } = useUser(user.email)
     const history = useHistory()
     const [ errors, setErrors ] = useState(false)
     const reset = () => {
@@ -106,7 +106,7 @@ function Requests({ user }) {
 
         try {
             if ( data.get('email')) {
-                const response = await add({
+                const response = await addF({
                     email: data.get('email'),
                     name: data.get('name'),
                 });
@@ -155,7 +155,7 @@ function Requests({ user }) {
 }
 
 function FriendList({ user }) {
-    const { remove } = useFriend(user.email)
+    const { removeF } = useUser(user.email)
     const history = useHistory()
     const [ errors, setErrors ] = useState(false)
     const reset = () => {
@@ -165,8 +165,7 @@ function FriendList({ user }) {
     const submit = async (email) => {
 
         try {
-            const response = await remove(email);
-
+            const response = await removeF(email);
             window.location.reload();
 
             if (response && response.ok) {
