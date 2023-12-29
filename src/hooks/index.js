@@ -54,7 +54,7 @@ export function useUser(id = null) {
 
 
     const update = user => API.instance()
-            .updateUser(id, user)
+            .updateUser(userId, user)
             .then(user => setData(user))
 
     const addF = friend => API.instance()

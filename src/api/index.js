@@ -129,27 +129,37 @@ export default class API {
     }
 
     async findComments(filtro) {
-        let url = "http://localhost:8080/comments?"
-        for (let key in filtro){
-            for(let key2 in filtro[key]){
-                if(filtro[key][key2] === ""){
-                    continue
-                }else{
-                    url = url + `${key2}=${filtro[key][key2]}&`
+        let url = "http://localhost:8080/comments?";
+        for (let key in filtro) {
+            for (let key2 in filtro[key]) {
+                if (filtro[key][key2] === "") {
+                    continue;
+                } else {
+                    url = url + `${key2}=${filtro[key][key2]}&`;
                 }
             }
         }
-        if(url === "http://localhost:8080/comments?"){
-            url = "http://localhost:8080/comments"
-        }else{
-            url = url.slice(0, -1)
+        if (url === "http://localhost:8080/comments?") {
+            url = "http://localhost:8080/comments";
+        } else {
+            url = url.slice(0, -1);
         }
-        const response = await fetch(url,{
+
+        const response = await fetch(url, {
             method: "GET",
-            headers: { 'Content-Type': 'application/json',
+            headers: {
+                'Content-Type': 'application/json',
                 'Authorization': this.#token
-            }})
-        return await response.json()
+            }
+        });
+
+        try {
+            // Intenta analizar la respuesta como JSON
+            return await response.json();
+        } catch (error) {
+            // Si hay un error, devuelve la respuesta sin procesar
+            return response;
+        }
     }
 
     async createComment(comment) {
