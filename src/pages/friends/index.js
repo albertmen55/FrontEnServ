@@ -4,11 +4,13 @@ import {AuthenticationContext} from "../../context";
 import {useContext} from "react";
 import { useUser, useFriend } from '../../hooks'
 import {
-    AtSymbolOutline, CalendarOutline,
-    CalendarOutline as Calendar, FingerPrintOutline,
-    LocationMarkerOutline as Point, UserOutline
+    AtSymbolOutline,
+    CalendarOutline as Calendar,
+    LocationMarkerOutline as Point,
+    UserOutline,
+    XOutline
 } from "@graywolfai/react-heroicons";
-import {useHistory} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
 
 const backdrop = pic=> {
     const picture = pic === 'none' ? "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg" : pic
@@ -99,21 +101,29 @@ function Requests({ user }) {
     }
 
     const submit = async (event) => {
-        event.preventDefault()
-        const data = new FormData(event.target)
+        event.preventDefault();
+        const data = new FormData(event.target);
 
         try {
-            if (user.email) {
-                await add({
+            if ( data.get('email')) {
+                const response = await add({
                     email: data.get('email'),
-                    name: data.get('name')
-                })
+                    name: data.get('name'),
+                });
+
+                window.location.reload();
+
+                if (response && response.ok) {
+                    history.push('/');
+                } else {
+                    setErrors(true);
+                }
             }
-            history.push('/')
         } catch (err) {
-            setErrors(true)
+            setErrors(true);
         }
-    }
+    };
+
 
 
     return <div>
@@ -145,6 +155,32 @@ function Requests({ user }) {
 }
 
 function FriendList({ user }) {
+    const { remove } = useFriend(user.email)
+    const history = useHistory()
+    const [ errors, setErrors ] = useState(false)
+    const reset = () => {
+        setErrors(false)
+    }
+
+    const submit = async (email) => {
+
+        try {
+            const response = await remove(email);
+
+            window.location.reload();
+
+            if (response && response.ok) {
+                history.push('/');
+            } else {
+                setErrors(true);
+            }
+        } catch (err) {
+            setErrors(true);
+        }
+    };
+
+
+
     if (!user || !user.friends) {
         return (
             <div>
@@ -158,10 +194,17 @@ function FriendList({ user }) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {user.friends.map((friend, index) => (
-                <div key={index} className="bg-white p-4 rounded-md shadow-md">
-                    <h3 className="text-lg font-semibold">{friend.name}</h3>
-                    <p className="text-sm text-gray-500">{friend.email}</p>
+                <div key={index} className="bg-white p-4 rounded-md shadow-md flex items-center justify-between">
+                    <div>
+                        <h3 className="text-lg font-semibold">{friend.name}</h3>
+                        <p className="text-sm text-gray-500">{friend.email}</p>
+                    </div>
+                    <XOutline
+                        className="h-10 w-10 mx-4 text-black-500 cursor-pointer"
+                        onClick={() => submit(friend.email)}
+                    />
                 </div>
+
             ))}
         </div>
     </div>

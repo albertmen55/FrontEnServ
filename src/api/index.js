@@ -283,31 +283,32 @@ export default class API {
         });
     }
 
-    async addFriend(id, body) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const url = `http://localhost:8080/users/${id}/friends`
-                const request = {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `${this.#token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body)
-                };
-                const response = await fetch(url, request);
-                if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
-                } else {
-                    reject(`Error al añadir al amigo: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-                reject(error);
+    async addFriend(id, friend) {
+        const url = `http://localhost:8080/users/${id}/friends`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': this.#token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: friend.email, name: friend.name }),
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                return user;
+            } else {
+                const errorMessage = await response.text();
+                throw new Error(`Error al añadir al amigo: ${errorMessage}`);
             }
-        });
+        } catch (error) {
+            console.error('Error:', error.message);
+            throw error;
+        }
     }
+
 
     async deleteFriend(id, friend) {
         return new Promise(async (resolve, reject) => {
@@ -315,13 +316,18 @@ export default class API {
                 const response = await fetch(`http://localhost:8080/users/${id}/friends/${friend}`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': `${this.#token}`,
-                        'Content-Type': 'application/json',
+                        'Authorization': `${this.#token}`
                     },
                 });
+
                 if (response.ok) {
-                    const user = await response.json();
-                    resolve(user);
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const user = await response.json();
+                        resolve(user);
+                    } else {
+                        resolve();
+                    }
                 } else {
                     reject(`Error al eliminar el amigo: ${response.statusText}`);
                 }
@@ -331,5 +337,6 @@ export default class API {
             }
         });
     }
+
 
 }
