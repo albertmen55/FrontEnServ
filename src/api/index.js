@@ -285,28 +285,29 @@ export default class API {
 
     async addFriend(id, friend) {
         const url = `http://localhost:8080/users/${id}/friends`;
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({email: friend.email, name: friend.name}),
+                });
 
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': this.#token,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: friend.email, name: friend.name }),
-            });
-
-            if (response.ok) {
-                const user = await response.json();
-                return user;
-            } else {
-                const errorMessage = await response.text();
-                throw new Error(`Error al añadir al amigo: ${errorMessage}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    resolve(user);
+                } else {
+                    const errorMessage = await response.text();
+                    throw new Error(`Error al añadir al amigo: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                reject(error);
             }
-        } catch (error) {
-            console.error('Error:', error.message);
-            throw error;
-        }
+        });
     }
 
 
@@ -316,20 +317,17 @@ export default class API {
                 const response = await fetch(`http://localhost:8080/users/${id}/friends/${friend}`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': `${this.#token}`
+                        'Authorization': `${this.#token}`,
+                        'Content-Type': 'application/json',
                     },
                 });
 
                 if (response.ok) {
-                    const contentType = response.headers.get('Content-Type');
-                    if (contentType && contentType.includes('application/json')) {
-                        const user = await response.json();
-                        resolve(user);
-                    } else {
-                        resolve();
-                    }
+                    const user = await response.json();
+                    resolve(user);
                 } else {
-                    reject(`Error al eliminar el amigo: ${response.statusText}`);
+                    const errorMessage = await response.text();
+                    throw new Error(`Error al borrar al amigo: ${errorMessage}`);
                 }
             } catch (error) {
                 console.error('Error:', error.message);

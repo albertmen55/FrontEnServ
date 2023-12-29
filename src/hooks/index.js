@@ -57,44 +57,24 @@ export function useUser(id = null) {
             .updateUser(id, user)
             .then(user => setData(user))
 
+    const addF = friend => API.instance()
+            .addFriend(userId, friend)
+            .then(user => setData(user));
+
+
+    const removeF = friend => API.instance()
+            .deleteFriend(userId, friend)
+            .then(user => setData(user));
+
+
     return {
         user: data,
         create,
-        update
+        update,
+        addF,
+        removeF
     }
 }
-
-export function useFriend(id) {
-    const [data, setData] = useState([]);
-    const userId = id === null ? localStorage.getItem('user') : id;
-
-    useEffect(() => {
-        API.instance()
-            .findUser(userId)
-            .then(user => {
-                setData(user);
-            });
-    }, [userId]);
-
-    const add = friend => {
-        API.instance()
-            .addFriend(userId, friend)
-            .then(user => setData(prevData => user)); // Utilizar el callback de setData
-    };
-
-    const remove = friend => {
-        API.instance()
-            .deleteFriend(userId, friend)
-            .then(user => setData(prevData => user)); // Utilizar el callback de setData
-    };
-
-    return {
-        user: data,
-        add,
-        remove
-    };
-}
-
 
 
 export function useComments(query = {}){
