@@ -222,7 +222,7 @@ export default class API {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: user.email, name: user.name, password: user.password, birthday: user.birthday })
+                    body: JSON.stringify({ email: user.email, name: user.name, password: user.password, birthday: user.birthday, country: user.country, picture: user.picture })
 
                 };
 

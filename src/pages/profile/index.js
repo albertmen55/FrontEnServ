@@ -19,12 +19,12 @@ export default function Profile() {
     const user = useUser().user
 
     return <Shell>
-        <img style = {{ height: '36rem' }}
+        <img style = {{ height: '28rem' }}
              src = { backdrop(user.picture) }
              alt = { `${user.name} backdrop` }
              className = 'absolute top-2 left-0 right-0 w-full object-cover filter blur transform scale-105' />
 
-        <div className = 'mx-auto w-full max-w-screen-2xl p-8'>
+        <div className = 'mx-auto max-w-screen-2xl p-8'>
             <Header user = { user } />
             <Comments user = { user } />
             <div className="mt-20">
@@ -35,7 +35,7 @@ export default function Profile() {
 
 function Header({ user}) {
     return <header className = 'mt-64 relative flex items-end pb-8 mb-8'>
-        <img style = {{ aspectRatio: '1/1' }}
+        <img style = {{ height: "250px" }}
              src = { user.picture || "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg" }
              alt = { `${ user.name } poster` }
              className = 'w-64 rounded-full shadow-xl z-20' />

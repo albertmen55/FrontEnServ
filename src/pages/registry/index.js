@@ -23,7 +23,7 @@ export default function Login() {
             const [day, month, year] = birthday.split(/[^0-9]/).map(part => Number.parseInt(part))
             const date = new Date(year, month - 1, day)
 
-            debugger
+            //debugger
 
             if(date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
                 setErrors(true)
@@ -36,7 +36,9 @@ export default function Login() {
                         day,
                         month,
                         year
-                    }
+                    },
+                    country: "",
+                    picture: ""
                 })
 
                 history.push('/')

@@ -23,7 +23,7 @@ export default function Friends() {
     const user = useUser().user
 
     return <Shell>
-        <img style = {{ height: '36rem' }}
+        <img style = {{ height: '28rem' }}
              src = { backdrop(user.picture) }
              alt = { `${user.name} backdrop` }
              className = 'absolute top-2 left-0 right-0 w-full object-cover filter blur transform scale-105' />
@@ -40,7 +40,7 @@ export default function Friends() {
 
 function Header({ user}) {
     return <header className = 'mt-64 relative flex items-end pb-8 mb-8'>
-        <img style = {{ aspectRatio: '1/1' }}
+        <img style = {{ height: "250px" }}
              src = { user.picture || "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg" }
              alt = { `${ user.name } poster` }
              className = 'w-64 rounded-full shadow-xl z-20' />
@@ -181,11 +181,13 @@ function FriendList({ user }) {
 
 
     if (!user || !user.friends) {
-        return (
-            <div>
-                <p>Cargando...</p>
+        return <div className="mt-10">
+            <h1 className="text-2xl font-bold mb-4">Amigos</h1>
+            <Separator/>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <p>El usuario aún no tiene amigos</p>
             </div>
-        );
+        </div>
     }
     return <div className="mt-10">
         <h1 className="text-2xl font-bold mb-4">Amigos</h1>
