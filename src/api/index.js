@@ -310,6 +310,12 @@ export default class API {
                     const user = await response.json();
                     resolve(user);
                 } else {
+                    if(response.status==404) {
+                        alert("El usuario no existe")
+                    } else if(response.status==400) {
+                        alert("Ya son amigos")
+                    }
+
                     const errorMessage = await response.text();
                     throw new Error(`Error al añadir al amigo: ${errorMessage}`);
                 }
@@ -345,6 +351,4 @@ export default class API {
             }
         });
     }
-
-
 }
